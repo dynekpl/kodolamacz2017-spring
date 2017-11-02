@@ -1,11 +1,56 @@
 <?xml version = "1.0" encoding = "UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:p="http://www.springframework.org/schema/p" xmlns:c="http://www.springframework.org/schema/c"
+       xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
+    <!---
+        <import resource="classpath:zadanie.xml"/>
+-->
+    <context:property-placeholder location="params.properties"
+                                  file-encoding="UTF-8"
+                                  ignore-unresolvable="true"/>
 
-    <bean id="car" class="pl.kodolamacz.spring.Car"/>
+    <!--w przypadku braku unikalności można nadać primary aby wymusić pobranie beana-->
+    <bean id="car" class="pl.kodolamacz.spring.Car" primary="true">
+        <constructor-arg value="${car.name}"/>
+    </bean>
+
+    <!--wstrzyknięcie koła-->
+    <bean id="car2" class="pl.kodolamacz.spring.Car" init-method="init">
+        <property name="wheel" ref="wheel"/>
+    </bean>
+
+    <!--typ prosty-->
+    <bean id="car3" class="pl.kodolamacz.spring.Car" destroy-method="destroy">
+        <property name="name" value="Mitsubishi"/>
+    </bean>
+
+    <!-- Korzystanie z przestrzeni p (jako wrzucanie propertisów (settery) -->
+    <bean id="car4" class="pl.kodolamacz.spring.Car"
+          p:wheel-ref="wheel"/>
+
+    <!-- Korzystanie z przestrzeni c (jako wykorzystanie constructora -->
+    <bean id="car5" class="pl.kodolamacz.spring.Car"
+          c:_0-ref="wheel"/>
+
+    <bean id="car6" class="pl.kodolamacz.spring.Car"
+          c:wheel-ref="wheel"/>
+
+    <!--zastosowanie konwersji-->
+    <bean id="car7" class="pl.kodolamacz.spring.Car">
+        <property name="pattern" value="a+"/>
+    </bean>
+
+    <!--dla metod statycznych-->
+    <bean id="pollution" class="pl.kodolamacz.spring.Car" factory-method="produceStaticPollution"/>
+
+    <!--dla metod niestatycznych-->
+    <bean id="pollution2" factory-bean="car" factory-method="producePollution"/>
+
+    <bean id="wheel" class="pl.kodolamacz.spring.Wheel"  scope="prototype"/>
 
 
 </beans>
