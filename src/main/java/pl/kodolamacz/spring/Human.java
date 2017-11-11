@@ -1,28 +1,19 @@
 package pl.kodolamacz.spring;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+@Component
 public class Human {
 
-  Leg leg;
-
-  public Human(Leg leg) {
-    this.leg = leg;
-  }
+  private Leg leg;
 
   public Human() {
   }
 
-  public Leg getLeg() {
-    return leg;
-  }
-
-  public void setLeg(Leg leg) {
+  @Autowired
+  public Human(Leg leg) {
     this.leg = leg;
   }
 
-  @Override
-  public String toString() {
-    return "Human{" +
-            "leg=" + leg +
-            '}';
-  }
 }
